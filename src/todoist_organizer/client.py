@@ -1,6 +1,5 @@
 """Todoist API client wrapper."""
 
-from datetime import datetime
 from todoist_api_python.api import TodoistAPI
 from todoist_api_python.models import Task
 from . import config
@@ -22,8 +21,7 @@ class TodoistClient:
 
     def update_task_due(self, task_id: str, date: str) -> None:
         """Update task due date (YYYY-MM-DD format)."""
-        due_datetime = datetime.strptime(date, "%Y-%m-%d")
-        self.api.update_task(task_id=task_id, due_date=due_datetime)
+        self.api.update_task(task_id=task_id, due_string=date)
 
     def update_task_labels(self, task_id: str, labels: list[str]) -> None:
         """Update task labels (replaces existing labels)."""

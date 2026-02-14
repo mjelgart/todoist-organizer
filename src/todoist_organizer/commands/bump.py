@@ -41,9 +41,11 @@ def run_bump(dry_run: bool = False):
     # Fetch overdue Meta tasks
     overdue_tasks = client.get_tasks(filter="##Meta & overdue")
 
-    # If after business hours, also fetch today's tasks
+    # If it's a weekend or after business hours, also fetch today's tasks
+    # (no point waiting on weekends since they can't be completed anyway)
     tasks_to_bump = list(overdue_tasks)
-    if now.hour >= config.BUSINESS_HOUR_END:
+    is_weekend = now.weekday() in (5, 6)  # Saturday=5, Sunday=6
+    if is_weekend or now.hour >= config.BUSINESS_HOUR_END:
         today_tasks = client.get_tasks(filter="##Meta & today")
         # Deduplicate by task ID
         existing_ids = {task.id for task in tasks_to_bump}
